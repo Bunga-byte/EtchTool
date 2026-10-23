@@ -1,0 +1,6 @@
+recorded_at,effective_at,equipment_id,chamber_id,synthetic,source_id,signal,value,unit,operating_state,measurement_kind,rf_source
+2026-10-20T08:00:00Z,2026-10-20T08:00:00Z,SYN-TOOL-A,SYN-CH-A1,true,SYN-TRACE-0,SYN-reflected-power,1.0,synthetic arb. units,synthetic_process,sensor,SYN-RF-SOURCE-A
+2026-10-20T08:00:00Z,2026-10-20T08:01:00Z,SYN-TOOL-A,SYN-CH-A1,true,SYN-TRACE-1,SYN-reflected-power,1.1,synthetic arb. units,synthetic_process,sensor,SYN-RF-SOURCE-A
+2026-10-20T08:00:00Z,2026-10-20T08:02:00Z,SYN-TOOL-A,SYN-CH-A1,true,SYN-TRACE-2,SYN-reflected-power,1.0,synthetic arb. units,synthetic_process,sensor,SYN-RF-SOURCE-A
+2026-10-20T08:00:00Z,2026-10-20T08:03:00Z,SYN-TOOL-A,SYN-CH-A1,true,SYN-TRACE-3,SYN-reflected-power,1.8,synthetic arb. units,synthetic_process,sensor,SYN-RF-SOURCE-A
+2026-10-20T08:00:00Z,2026-10-20T08:04:00Z,SYN-TOOL-A,SYN-CH-A1,true,SYN-TRACE-4,SYN-reflected-power,2.5,synthetic arb. units,synthetic_process,sensor,SYN-RF-SOURCE-A

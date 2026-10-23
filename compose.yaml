@@ -1,0 +1,54 @@
+name: frip
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: frip
+      POSTGRES_DB: frip
+      POSTGRES_PASSWORD: ${FRIP_DB_PASSWORD:-frip-local-synthetic}
+    volumes:
+      - frip-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U frip -d frip"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      FRIP_DATABASE_URL: postgresql+psycopg://frip:${FRIP_DB_PASSWORD:-frip-local-synthetic}@db:5432/frip
+      FRIP_MODE: ${FRIP_MODE:-synthetic}
+      FRIP_TOKENS_JSON: ${FRIP_TOKENS_JSON:-{}}
+      FRIP_CORS_ORIGINS: '["http://localhost:8080","http://127.0.0.1:8080"]'
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 15s
+    restart: unless-stopped
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-Y", "off", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+volumes:
+  frip-postgres:

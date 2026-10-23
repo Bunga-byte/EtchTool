@@ -1,0 +1,72 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-TRACE-0",
+    "signal": "SYN-reflected-power",
+    "value": 1.0,
+    "unit": "synthetic arb. units",
+    "operating_state": "synthetic_process",
+    "measurement_kind": "sensor",
+    "rf_source": "SYN-RF-SOURCE-A"
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:01:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-TRACE-1",
+    "signal": "SYN-reflected-power",
+    "value": 1.1,
+    "unit": "synthetic arb. units",
+    "operating_state": "synthetic_process",
+    "measurement_kind": "sensor",
+    "rf_source": "SYN-RF-SOURCE-A"
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:02:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-TRACE-2",
+    "signal": "SYN-reflected-power",
+    "value": 1.0,
+    "unit": "synthetic arb. units",
+    "operating_state": "synthetic_process",
+    "measurement_kind": "sensor",
+    "rf_source": "SYN-RF-SOURCE-A"
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:03:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-TRACE-3",
+    "signal": "SYN-reflected-power",
+    "value": 1.8,
+    "unit": "synthetic arb. units",
+    "operating_state": "synthetic_process",
+    "measurement_kind": "sensor",
+    "rf_source": "SYN-RF-SOURCE-A"
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:04:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-TRACE-4",
+    "signal": "SYN-reflected-power",
+    "value": 2.5,
+    "unit": "synthetic arb. units",
+    "operating_state": "synthetic_process",
+    "measurement_kind": "sensor",
+    "rf_source": "SYN-RF-SOURCE-A"
+  }
+]

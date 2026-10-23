@@ -1,0 +1,26 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-EVENT-001",
+    "event_id": "SYN-EVENT-001",
+    "event_type": "alarm_asserted",
+    "code": "SYN-ALARM-NOT-OEM",
+    "message": "Synthetic excursion; no confirmed hardware failure."
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:05:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-EVENT-002",
+    "event_id": "SYN-EVENT-002",
+    "event_type": "alarm_cleared",
+    "code": "SYN-ALARM-NOT-OEM",
+    "message": "Synthetic excursion cleared following inspection."
+  }
+]

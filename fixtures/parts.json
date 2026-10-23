@@ -1,0 +1,29 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-09-01T00:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-PART-OLD",
+    "component_serial": "SYN-SERIAL-OLD",
+    "part_number": "SYN-PN-100",
+    "position_id": "SYN-POS-01",
+    "installed_at": "2026-09-01T00:00:00Z",
+    "removed_at": "2026-10-20T08:00:00Z",
+    "revision": "SYN-A"
+  },
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-PART-NEW",
+    "component_serial": "SYN-SERIAL-NEW",
+    "part_number": "SYN-PN-100",
+    "position_id": "SYN-POS-01",
+    "installed_at": "2026-10-20T08:00:00Z",
+    "revision": "SYN-B"
+  }
+]

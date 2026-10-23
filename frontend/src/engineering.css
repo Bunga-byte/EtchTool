@@ -1,0 +1,317 @@
+.fdc-overlay {
+  padding: 17px 20px 11px;
+}
+.fdc-overlay svg {
+  width: 100%;
+  display: block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  fill: #95a3b0;
+}
+.trace-context {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 9px;
+  color: #758c9a;
+}
+.trace-context small {
+  font-size: 8px;
+  color: #a0adb6;
+}
+.trace-legend {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  font-size: 8px;
+  color: #889ca7;
+}
+.trace-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.trace-legend i {
+  height: 3px;
+  width: 18px;
+  border-radius: 2px;
+}
+.replacement-list {
+  padding: 0 20px;
+}
+.replacement-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #e4ebee;
+}
+.replacement-row:last-child {
+  border-bottom: 0;
+}
+.replacement-row .eyebrow {
+  font-size: 7px;
+  margin-bottom: 7px;
+}
+.replacement-row > svg {
+  color: #8db8ad;
+}
+.replacement-row small {
+  width: 100%;
+  color: #98a8b1;
+  font-size: 8px;
+}
+.inventory-dispute {
+  font-size: 7px;
+  color: #af7e30;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 5px;
+}
+.source-claim-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.source-claim-options label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 9px;
+  color: #7e8f99;
+}
+.source-claim-options input {
+  accent-color: #168e85;
+}
+.export-button {
+  display: inline-flex;
+}
+@media (max-width: 650px) {
+  .fdc-overlay {
+    padding: 14px 10px 10px;
+  }
+  .trace-context {
+    font-size: 8px;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .trace-context small {
+    font-size: 7px;
+  }
+  .trace-legend {
+    font-size: 7px;
+  }
+  .replacement-row {
+    gap: 12px;
+  }
+  .replacement-row .text-link {
+    font-size: 9px;
+  }
+  .replacement-row .eyebrow {
+    font-size: 6px;
+  }
+}
+.import-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.import-form > label {
+  font-size: 9px;
+  color: #8397a6;
+}
+.import-form > .button {
+  align-self: flex-start;
+}
+.import-form > small {
+  font-size: 8px;
+  color: #98a7b1;
+}
+.import-form > textarea {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  resize: vertical;
+  max-height: 350px;
+}
+.import-controls {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+.import-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 9px;
+  color: #8397a6;
+}
+.import-controls input {
+  font-size: 9px;
+  max-width: 300px;
+}
+.import-result {
+  border: 1px solid #d6e8df;
+  background: #f4faf7;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 10px;
+  color: #5f8a7b;
+}
+.import-result p {
+  font-size: 9px;
+  margin-top: 8px;
+}
+.component-snapshot {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 8px;
+  color: #95a4af;
+  margin: 0 0 15px;
+}
+.component-snapshot > svg {
+  flex-shrink: 0;
+}
+.export-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-direction: column;
+}
+.export-control > .inline-error {
+  padding: 5px;
+  max-width: 200px;
+  font-size: 8px;
+}
+.assembly-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #edf0f3;
+  background: #fbfcfd;
+}
+.assembly-toolbar > label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 8px;
+  color: #95a3ad;
+}
+.assembly-toolbar select {
+  font-size: 9px;
+  min-width: 125px;
+}
+.assembly-toolbar > svg {
+  color: #acb8c1;
+}
+.assembly-toolbar > span {
+  margin-left: auto;
+  font-size: 7px;
+  color: #a2adb7;
+}
+.cohort-context {
+  background: #fff;
+  border: 1px solid #e2e8ef;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  border-radius: 6px;
+}
+.cohort-context > strong {
+  font-size: 10px;
+  color: #597b85;
+}
+.cohort-context > p {
+  font-size: 10px;
+  margin-top: 5px;
+  color: #78909b;
+}
+.cohort-context > span {
+  display: block;
+  font-size: 8px;
+  color: #99a8b1;
+  margin-top: 7px;
+}
+.exclusion-reason {
+  white-space: normal;
+  min-width: 180px;
+}
+.teaching-model-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 20px;
+}
+.teaching-model-header > svg {
+  color: #77999e;
+  flex-shrink: 0;
+}
+.teaching-model-header > div {
+  flex: 1;
+}
+.teaching-model-header strong {
+  font-size: 11px;
+  color: #587c88;
+}
+.teaching-model-header p {
+  font-size: 9px;
+  color: #8b9da7;
+  margin-top: 4px;
+}
+.teaching-model-header small {
+  display: block;
+  font-size: 8px;
+  color: #9aa9b2;
+  margin-top: 6px;
+}
+.teaching-model-header + .notice {
+  margin: 0 20px 16px;
+}
+.panel-footnote ul {
+  padding-left: 15px;
+  font-size: 9px;
+  color: #95a4af;
+}
+.panel-footnote li {
+  margin: 5px 0;
+}
+@media (max-width: 1200px) {
+  .assembly-toolbar > span {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  .assembly-toolbar {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .assembly-toolbar > label {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .assembly-toolbar select {
+    min-width: 0;
+    width: 100%;
+    font-size: 8px;
+  }
+  .cohort-context {
+    padding: 14px 15px;
+  }
+  .teaching-model-header {
+    padding: 16px;
+    gap: 9px;
+  }
+  .teaching-model-header > .badge {
+    font-size: 7px;
+  }
+  .teaching-model-header + .notice {
+    margin: 0 16px 14px;
+  }
+}

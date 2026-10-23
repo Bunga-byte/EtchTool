@@ -1,0 +1,14 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-MILESTONE-001",
+    "milestone": "Synthetic acceptance review",
+    "status": "pending",
+    "configuration": "SYN-CONFIG-A",
+    "document_reference": "SYNTHETIC-NON-OEM-TEST-PLAN"
+  }
+]

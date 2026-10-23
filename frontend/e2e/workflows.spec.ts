@@ -1,0 +1,150 @@
+import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+test('fleet data and chamber selection come from the API', async ({ page, request }) => {
+  const fleetResponse = await request.get('/api/fleet');
+  expect(fleetResponse.ok()).toBeTruthy();
+  const fleet = await fleetResponse.json();
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Fleet overview', exact: true })).toBeVisible();
+  await expect(page.locator('.tool-card')).toHaveCount(fleet.metrics.tools);
+  await expect(page.getByText('SYNTHETIC DATA', { exact: true })).toBeVisible();
+  await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Chamber inventory' }).click();
+  await page.getByLabel('Tool', { exact: true }).selectOption('tool-2');
+  await page.getByLabel('Chamber', { exact: true }).selectOption('ch-2-b');
+  const inventoryResponse = await request.get('/api/inventory?chamber_id=ch-2-b');
+  const inventory = await inventoryResponse.json();
+  await expect(page.locator('tbody tr')).toHaveCount(inventory.items.length);
+  const part = inventory.items.find((p: any) => p.exposure.dimension === 'rf_hours');
+  await page.getByRole('combobox', { name: 'Subsystem', exact: true }).selectOption(part.subsystem);
+  await page.getByRole('combobox', { name: 'Assembly', exact: true }).selectOption(part.assembly);
+  await expect(page.locator('tbody tr')).toHaveCount(1);
+  await page.getByLabel('Search components').fill(part.serial_number);
+  await expect(page.locator('tbody tr')).toHaveCount(1);
+  await page.getByRole('button', { name: `Open ${part.serial_number}`, exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText(part.serial_number);
+  await expect(dialog.getByRole('heading', { name: 'Insufficient evidence for reliable failure prediction.', exact: true })).toBeVisible();
+  await expect(dialog.getByRole('heading', { name: 'Source provenance & calculation confidence' })).toBeVisible();
+  await dialog.getByRole('tab', { name: 'Lifecycle history' }).click();
+  await expect(dialog.getByRole('heading', { name: 'Installation & replacement timeline' })).toBeVisible();
+  await expect(dialog.locator('.timeline-item').first()).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+});
+
+test('historical inventory shows the removed serial before replacement', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'Chamber inventory' }).click();
+  await page.getByLabel('Tool', { exact: true }).selectOption('tool-1');
+  await page.getByLabel('Chamber', { exact: true }).selectOption('ch-1-a');
+  await expect(page.getByRole('button', { name: 'Open SYN-01A-RF-002', exact: true })).toBeVisible();
+  await page.getByLabel('Inventory as of (UTC)').fill('2026-01-15T12:00');
+  await page.getByRole('button', { name: 'Apply timestamp' }).click();
+  await expect(page.getByRole('button', { name: 'Open SYN-01A-RF-001', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Open SYN-01A-RF-002', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Open SYN-01A-RF-001', exact: true }).click();
+  await page.getByRole('tab', { name: 'Lifecycle history' }).click();
+  await expect(page.getByRole('dialog')).toContainText('Removed');
+  await page.getByRole('button', { name: 'Close component details' }).click();
+  await page.getByRole('button', { name: 'Return to current' }).click();
+  await expect(page.getByRole('button', { name: 'Open SYN-01A-RF-002', exact: true })).toBeVisible();
+});
+
+test('PM filters and reliability statistics show measured engineering data', async ({ page, request }) => {
+  const pm = await (await request.get('/api/pm')).json();
+  const overdue = pm.items.filter((p: any) => p.pm.status === 'overdue');
+  expect(overdue.length).toBeGreaterThan(0);
+  await page.goto('/');
+  const nav = page.getByRole('navigation', { name: 'Main navigation' });
+  await nav.getByRole('button', { name: 'PM planner' }).click();
+  await page.getByRole('button', { name: 'Overdue', exact: true }).click();
+  await expect(page.locator('tbody tr')).toHaveCount(overdue.length);
+  await expect(page.getByText('synthetic engineer-entered policies', { exact: true })).toBeVisible();
+  await nav.getByRole('button', { name: 'Reliability analytics' }).click();
+  await expect(page.getByRole('heading', { name: 'Kaplan–Meier survival', exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Kaplan–Meier survival probability/ })).toBeVisible();
+  await expect(page.getByText('95% CI:', { exact: false })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Revision comparison' })).toBeVisible();
+  await expect(page.locator('tbody tr')).not.toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Statistical teaching model · separate synthetic cohort' })).toBeVisible();
+  await expect(page.getByText('synthetic-exponential-cohort-v1', { exact: false })).toBeVisible();
+});
+
+test('failure packet and integration provenance are usable in read-only mode', async ({ page }) => {
+  await page.goto('/');
+  const nav = page.getByRole('navigation', { name: 'Main navigation' });
+  await nav.getByRole('button', { name: 'Investigations', exact: true }).click();
+  await page.getByLabel('Search investigations').fill('Synthetic RF instability');
+  await page.locator('.case-picker button').first().click();
+  await expect(page.getByRole('heading', { name: 'Evidence & findings' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Competing hypotheses' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Event chronology' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Record engineering decision' })).toBeDisabled();
+  await nav.getByRole('button', { name: 'Data integrations' }).click();
+  await expect(page.getByText('No Samsung or Lam enterprise system is connected.', { exact: true })).toBeVisible();
+  await expect(page.locator('.connector-card')).toHaveCount(6);
+  await expect(page.getByRole('heading', { name: 'Source reconciliation queue' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Record resolution' }).first()).toBeDisabled();
+  const download = page.waitForEvent('download');
+  await nav.getByRole('button', { name: 'Chamber inventory' }).click();
+  await page.getByRole('link', { name: 'Export CSV' }).click();
+  expect((await download).suggestedFilename()).toMatch(/\.csv$/);
+});
+
+test('API failures have an actionable visible state and mobile navigation works', async ({ page }) => {
+  await page.route('**/api/fleet', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"detail":"Synthetic API outage for test"}' }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.getByText('Could not load records')).toBeVisible();
+  await expect(page.getByText('Synthetic API outage for test')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+  await page.getByRole('button', { name: 'Open navigation' }).click();
+  await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', { name: 'PM planner' }).click();
+  await expect(page.getByRole('heading', { name: 'Maintenance planner', exact: true })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Main navigation' })).not.toBeInViewport();
+});
+
+test('authorized engineering reviews and synthetic imports persist through the API', async ({ page, request }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Access settings', exact: true }).click();
+  await page.getByLabel('Authorized local bearer token').fill('synthetic-browser-editor');
+  await page.getByRole('button', { name: 'Use for this session' }).click();
+  const nav = page.getByRole('navigation', { name: 'Main navigation' });
+  await nav.getByRole('button', { name: 'Investigations', exact: true }).click();
+  await page.getByLabel('Search investigations').fill('Synthetic stability loss');
+  await page.locator('.case-picker button').first().click();
+  await expect(page.locator('.case-detail-heading')).toContainText('Synthetic stability loss');
+  await page.getByRole('combobox', { name: 'Decision', exact: true }).selectOption('unconfirmed');
+  await page.getByLabel('Evidence-based review note').fill('Synthetic browser review: physical causality remains unconfirmed.');
+  const decisionResponse = page.waitForResponse(r => r.url().includes('/adjudicate') && r.request().method() === 'POST');
+  await page.getByRole('button', { name: 'Record engineering decision' }).click();
+  expect((await decisionResponse).status()).toBe(200);
+  await expect(page.getByText('Engineering decision recorded in the audit trail.')).toBeVisible();
+
+  await nav.getByRole('button', { name: 'Data integrations' }).click();
+  const conflict = page.locator('.conflict-card').filter({ hasText: 'conflict-001' });
+  await conflict.getByLabel('Source decision').selectOption('accept_a');
+  await conflict.getByLabel('Reconciliation note').fill('Synthetic browser review: choose claim A pending canonical reconciliation.');
+  const resolutionResponse = page.waitForResponse(r => r.url().includes('/quality/conflict-001/resolve') && r.request().method() === 'POST');
+  await conflict.getByRole('button', { name: 'Record resolution' }).click();
+  const resolution = await resolutionResponse;
+  expect(resolution.status()).toBe(200);
+  expect((await resolution.json()).status).toBe('decision_recorded_pending_materialization');
+  await expect(conflict).toContainText('pending materialization');
+
+  const records = JSON.parse(readFileSync(new URL('../../fixtures/parts.json', import.meta.url), 'utf8'));
+  await page.getByLabel('Adapter source').selectOption('parts');
+  await page.getByLabel('JSON records', { exact: true }).fill(JSON.stringify(records));
+  const importResponse = page.waitForResponse(r => r.url().includes('/integrations/parts/import') && r.request().method() === 'POST');
+  await page.getByRole('button', { name: 'Validate and stage records' }).click();
+  const imported = await importResponse;
+  expect(imported.status()).toBe(200);
+  const result = await imported.json();
+  expect(result.records).toHaveLength(records.length);
+  expect(result.errors).toHaveLength(0);
+  await expect(page.getByText('2 records staged · 0 duplicates · 0 validation errors')).toBeVisible();
+  const inventory = await (await request.get('/api/inventory')).json();
+  expect(inventory.items).toHaveLength(18);
+  expect(inventory.items.some((r: any) => r.serial_number === 'SYN-SERIAL-NEW')).toBeFalsy();
+});

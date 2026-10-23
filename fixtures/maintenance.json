@@ -1,0 +1,16 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-WO-001",
+    "work_order_id": "SYN-WO-001",
+    "component_serial": "SYN-SERIAL-OLD",
+    "action": "replacement",
+    "completed_at": "2026-10-20T08:00:00Z",
+    "finding": "Synthetic planned removal. Replacement alone does not prove failure.",
+    "replacement_serial": "SYN-SERIAL-NEW"
+  }
+]

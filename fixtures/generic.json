@@ -1,0 +1,15 @@
+[
+  {
+    "recorded_at": "2026-10-20T08:00:00Z",
+    "effective_at": "2026-10-20T08:00:00Z",
+    "equipment_id": "SYN-TOOL-A",
+    "chamber_id": "SYN-CH-A1",
+    "synthetic": true,
+    "source_id": "SYN-GENERIC-001",
+    "record_type": "synthetic_supplier_finding",
+    "data": {
+      "finding": "No physical causal evidence established",
+      "verification": "synthetic_unverified"
+    }
+  }
+]
