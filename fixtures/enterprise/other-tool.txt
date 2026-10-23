@@ -1,0 +1,8 @@
+SYNTHETIC SCOPED DOCUMENT
+Kind: maintenance
+Tool alias: tool2a
+Chamber alias: ch2a
+Component serial: SYN-02A-RF-001
+Maintenance type: inspection
+Completed at: 2026-01-26T00:00:00Z
+Findings: Synthetic no-fault inspection for scope-boundary tests.

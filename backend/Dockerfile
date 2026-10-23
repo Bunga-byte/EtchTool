@@ -12,6 +12,8 @@ RUN --mount=type=secret,id=build_ca \
     && useradd --create-home --uid 10001 frip
 COPY --chown=frip:frip backend/ /app/backend/
 COPY --chown=frip:frip fixtures/ /app/fixtures/
+COPY --chown=frip:frip integration_manifests/ /app/integration_manifests/
+COPY --chown=frip:frip schemas/ /app/schemas/
 RUN chown -R frip:frip /app
 USER frip
 EXPOSE 8000

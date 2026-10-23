@@ -1,0 +1,402 @@
+{
+  "schema_version": "1.0",
+  "connector_id": "fdc_trace",
+  "display_name": "FDC Trace (authorized interface unknown)",
+  "source_adapter_binding": "fdc",
+  "connection_state": "not_connected",
+  "external_environment_data": "synthetic_only",
+  "runtime_contract": {
+    "module": "app.enterprise.contracts",
+    "connector_protocol": "EnterpriseConnector",
+    "source_document_model": "SourceDocument",
+    "fact_proposal_model": "FactProposalDraft",
+    "auth_provider_protocol": "AuthenticationProvider",
+    "capability_fields": [
+      "discover_schema",
+      "search",
+      "retrieve_documents",
+      "retrieve_attachments",
+      "list_records",
+      "get_record",
+      "incremental_polling",
+      "time_series",
+      "installation_records",
+      "subscribe_updates"
+    ]
+  },
+  "capabilities": {
+    "expected_for_workflow": [
+      "discover_schema",
+      "list_records",
+      "incremental_polling",
+      "time_series"
+    ],
+    "actual_source_capabilities": null,
+    "capability_discovery_policy": "approved_interface_only_no_scanning"
+  },
+  "connection_configuration": {
+    "selected_transport": null,
+    "approved_interface_reference": null,
+    "endpoint_or_export_location": null,
+    "allowed_transport_categories_after_approval": [
+      "approved_api",
+      "internal_sdk",
+      "managed_export",
+      "file_drop",
+      "approved_other"
+    ],
+    "auth_provider_ref": null,
+    "secret_references": [],
+    "credential_values_permitted": false,
+    "equipment_allowlist": [],
+    "collection_allowlist": [],
+    "source_queries": [],
+    "configuration_approval_reference": null
+  },
+  "normalized_requirements": {
+    "description": "FRIP SourceDocument metadata plus SensorInput, SampleInput and ExposureRuleInput destination requirements. These are not actual source fields. Field units and applicability must be approved; all real mappings remain unconfigured.",
+    "required_fields": [
+      {
+        "destination": "document.original_id",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "provenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.revision",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "versioning"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.recorded_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "provenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.effective_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "effective_time"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.equipment_alias",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "identity"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.chamber_alias",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "chamber_identity"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sensor.channel_key",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "sensor_registry"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sample.timestamp",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "telemetry"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sample.value",
+        "data_type": "number",
+        "unit": null,
+        "required_for": [
+          "telemetry"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sample.unit",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "telemetry"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sample.state",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "state_filtering"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "exposure_rule.source_name",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "rf_exposure"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      }
+    ],
+    "optional_fields": [
+      {
+        "destination": "sensor.signal_type",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "measurement_kind"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sensor.sampling_hz",
+        "data_type": "number",
+        "unit": "Hz",
+        "required_for": [
+          "quality"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sample.quality",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "quality"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "exposure_rule.rollover",
+        "data_type": "number",
+        "unit": null,
+        "required_for": [
+          "counter_rollover"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sensor.configuration_id",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "applicability"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "sensor.document_reference",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "verified_limits"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "exposure_rule.active_value",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "state_exposure"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "exposure_rule.inactive_value",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "state_exposure"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "exposure_rule.max_gap_seconds",
+        "data_type": "number",
+        "unit": "s",
+        "required_for": [
+          "exposure_quality"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      }
+    ],
+    "canonical_destination_entities": [
+      "source_versions",
+      "sensor_channels",
+      "component_sensor_mappings",
+      "exposure_definitions",
+      "sensor_samples",
+      "calculation_lineage",
+      "equipment_configuration_periods",
+      "fdc_points",
+      "exposure_intervals",
+      "observation_coverage",
+      "counter_samples"
+    ],
+    "canonical_promotion_requires_review": true
+  },
+  "validation_rule_ids": [
+    "utc_aware_effective_and_recorded_time",
+    "preserve_original_content_hash_revision",
+    "exact_evidence_location_required",
+    "scope_source_equipment_collection",
+    "missing_serial_or_install_time_review",
+    "no_latest_arrival_authority",
+    "no_automatic_failure_from_alarm_or_replacement"
+  ],
+  "identity_matching": {
+    "deterministic_key_sets": [
+      [
+        "tool_alias",
+        "chamber_alias",
+        "channel_id",
+        "configuration_id",
+        "effective_at"
+      ]
+    ],
+    "description_only_merge_permitted": false,
+    "effective_interval_required": true,
+    "approved_aliases_required": true,
+    "missing_identity_action": "review_no_promotion",
+    "ambiguity_action": "review_no_merge",
+    "internal_ai_may_propose": true,
+    "internal_ai_may_verify_or_promote": false
+  },
+  "review_policy": {
+    "default": "engineering_approval_required",
+    "automatic_promotion_enabled": false,
+    "source_authority_rules": [],
+    "hard_stop_conditions": [
+      "missing_source_permission",
+      "unknown_equipment_or_collection",
+      "unsupported_capability",
+      "missing_identity_or_effective_timestamp",
+      "ambiguous_serial_or_position",
+      "conflicting_source_assertions",
+      "unverified_sensor_mapping",
+      "undocumented_oem_limit",
+      "external_ai_for_confidential_data"
+    ]
+  },
+  "synchronization": {
+    "frip_workflow_modes": [
+      "backfill",
+      "incremental",
+      "reprocess"
+    ],
+    "actual_source_method": null,
+    "incremental_source_field": null,
+    "checkpoint_semantics": "Persist only the last committed page. Unchanged hints use metadata_version_token(DocumentMetadata) over the complete UTC-normalized envelope, never body hash/revision alone; metadata-only corrections must be retrieved/reconciled. Resume without skipping failed work; actual source cursor semantics require approval.",
+    "periodic_polling_authorized": false,
+    "max_page_size": 100,
+    "bounded_queries_required": true,
+    "retry": {
+      "max_attempts": 3,
+      "initial_backoff_seconds": 1,
+      "max_backoff_seconds": 60,
+      "authorization_failure_action": "stop_no_retry"
+    },
+    "dead_letter_on_exhaustion": true
+  },
+  "error_handling": {
+    "unchanged_content": "deduplicate_preserve_lineage",
+    "invalid_record": "quarantine_with_evidence",
+    "conflicting_source": "preserve_both_review_required",
+    "unsupported_capability": "explicit_error_no_fallback_scraping",
+    "unavailable_evidence": "unverified_no_promotion"
+  },
+  "test_targets": {
+    "suite_paths": [
+      "backend/tests/test_enterprise_telemetry.py",
+      "backend/tests/test_engineering.py",
+      "backend/tests/test_manifest_schema.py",
+      "backend/tests/test_enterprise_jobs.py",
+      "backend/tests/test_enterprise_acceptance.py"
+    ],
+    "acceptance_scenarios": [
+      "B",
+      "D",
+      "E",
+      "F",
+      "I"
+    ],
+    "contract_validation_command": ".venv/bin/python -m pytest -q backend/tests/test_manifest_schema.py"
+  },
+  "outstanding_unknowns": [
+    "Approved channel catalog, source IDs and exact engineering units",
+    "Actual RF source identities, active-state definition and controller restart semantics",
+    "Counter reset/rollover/gap semantics and observation coverage",
+    "Sampling cadence, time synchronization, clock uncertainty and data quality flags",
+    "Bounded query API/export contract, retention, rate limits and incremental watermark"
+  ]
+}

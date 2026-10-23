@@ -1,6 +1,7 @@
 from alembic import context
 from sqlalchemy import create_engine
 from app.models import Base
+import app.enterprise.models  # register additive enterprise metadata
 from app.config import settings
 
 config = context.config

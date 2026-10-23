@@ -3,8 +3,44 @@ import { useState } from "react";
 import { mutate, useApi } from "../api";
 import { Badge, Empty, Field, Notice, Panel, State } from "../components";
 import { asItems, date, label, formatNumber as num } from "../utils";
+import { EnterpriseWorkspace } from "../enterprise/EnterpriseWorkspace";
 
 export function Integrations({ token }: { token: string }) {
+  const [workspace, setWorkspace] = useState("files");
+  return (
+    <>
+      <div
+        className="integration-workspace-tabs"
+        role="tablist"
+        aria-label="Integration management workspaces"
+      >
+        <button
+          role="tab"
+          aria-selected={workspace === "files"}
+          className={workspace === "files" ? "active" : ""}
+          onClick={() => setWorkspace("files")}
+        >
+          File adapters & quality
+        </button>
+        <button
+          role="tab"
+          aria-selected={workspace === "enterprise"}
+          className={workspace === "enterprise" ? "active" : ""}
+          onClick={() => setWorkspace("enterprise")}
+        >
+          Enterprise handoff workspace
+        </button>
+      </div>
+      {workspace === "files" ? (
+        <FileIntegrations token={token} />
+      ) : (
+        <EnterpriseWorkspace token={token} />
+      )}
+    </>
+  );
+}
+
+function FileIntegrations({ token }: { token: string }) {
   const api = useApi("/api/integrations");
   const quality = useApi("/api/quality");
   const [expanded, setExpanded] = useState("");

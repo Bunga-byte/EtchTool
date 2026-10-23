@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useApi } from "../api";
 import { useDialog } from "../useDialog";
 import { asItems, date, label, formatNumber as num } from "../utils";
+import { ComponentTelemetry } from "../enterprise/ComponentTelemetry";
 
 import {
   Badge,
@@ -107,6 +108,7 @@ export function PartDrawer({
                   ["overview", "Overview"],
                   ["history", "Lifecycle history"],
                   ["engineering", "Engineering evidence"],
+                  ["telemetry", "Telemetry & lineage"],
                 ].map(([key, text]) => (
                   <button
                     role="tab"
@@ -505,6 +507,7 @@ export function PartDrawer({
                     </Panel>
                   </>
                 )}
+                {tab === "telemetry" && <ComponentTelemetry component={d} />}
               </div>
             </>
           )}

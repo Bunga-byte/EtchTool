@@ -1,5 +1,7 @@
 # Data dictionary
 
+This foundation dictionary is supplemented by the current [Phase 2 canonical dictionary](DATA_DICTIONARY.md), including source versions, proposals/reviews, jobs/checkpoints, sensors, mappings and calculation lineage.
+
 All identifiers and records in the bundled dataset are fictional. UTC-aware timestamps are required. `[start, end)` means an inclusive start and exclusive end. Null engineering specifications mean unknown, not zero. Foreign keys use stable application IDs rather than tool display names. JSON is reserved for source payloads or variable evidence metadata; core relationships use relational keys.
 
 | Table | Meaning and key fields |
@@ -52,4 +54,4 @@ Failure rates use confirmed failure outcomes and compatible operating-exposure d
 
 Field provenance includes source, original source ID, recorded and effective time, verification, quality and synchronization information where present. Missing source metadata is a quality issue; it must not be silently filled as verified truth.
 
-File-backed imports retain staged source records and quality/conflict information. They do not automatically create canonical installations or operating exposure. Entity mapping and approved promotion from staging remain an integration step. The import fixtures use separate fictional IDs from the seeded fleet so an unreviewed example cannot silently alter the synthetic engineering baseline.
+Legacy file imports retain staged source records and quality/conflict information. The separate Phase 2 workflow supports reviewed entity matching and explicit canonical promotion; import arrival itself never changes physical inventory. Actual internal source mapping and authority require approval. Fixtures use separate fictional IDs from the seeded fleet so an unreviewed example cannot silently alter the synthetic engineering baseline.

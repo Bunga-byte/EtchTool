@@ -1,0 +1,7 @@
+SYNTHETIC FAILURE INVESTIGATION ADDENDUM
+Kind: failure_evidence
+Tool alias: tool1a
+Chamber alias: ch1a
+Component serial: SYN-01A-RF-001
+Failure id: case-001
+Findings: Synthetic maintenance narrative describes one previously tracked interruption; it does not establish a new failure episode or physical root cause.

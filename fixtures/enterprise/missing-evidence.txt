@@ -1,0 +1,9 @@
+SYNTHETIC INCOMPLETE DOCUMENT — NOT A SAMSUNG RECORD
+Kind: replacement
+Tool alias: tool1a
+Chamber alias: ch1a
+Position alias: rf1a
+Old component serial: SYN-01A-RF-002
+Maintenance type: unconfirmed_replacement_report
+Work order reference: SYN-ENTERPRISE-WO-MISSING
+Findings: Technician note lacks the incoming serial number and actual installation/removal timestamps. Do not infer identities or dates.

@@ -12,7 +12,21 @@ from pydantic import BaseModel, ConfigDict, Field, AwareDatetime
 from sqlalchemy import select, or_, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
-from .auth import Principal, principal, require_roles
+from .auth import Principal, principal, require_roles, require_export
+from .enterprise.canonical_security import (
+    canonical_scope,
+    scoped_inventory,
+    scoped_hierarchy,
+    scoped_component_detail,
+    scoped_failures,
+    scoped_failure_detail,
+    scoped_pm,
+    scoped_analytics,
+    scoped_fleet,
+    scoped_quality,
+    require_canonical_export,
+    require_conflict,
+)
 from .config import Settings, settings
 from .db import make_engine, migrate, get_session
 from .models import *
@@ -146,8 +160,14 @@ def quality(session):
     }
 
 
-def create_app(config: Settings | None = None, engine=None):
+def create_app(
+    config: Settings | None = None, engine=None, authentication_provider=None
+):
     config = config or settings()
+    if config.auth_backend == "external_provider" and authentication_provider is None:
+        raise ValueError(
+            "External authentication backend requires a verified principal provider"
+        )
     dbengine = engine or make_engine(config.database_url)
 
     @asynccontextmanager
@@ -164,6 +184,7 @@ def create_app(config: Settings | None = None, engine=None):
         description="Synthetic-only reliability workspace. No Samsung or Lam systems connected.",
         lifespan=lifespan,
     )
+    application.state.authentication_provider = authentication_provider
     application.state.config = config
     application.state.engine = dbengine
     application.state.sessions = sessionmaker(dbengine, expire_on_commit=False)
@@ -229,8 +250,10 @@ def create_app(config: Settings | None = None, engine=None):
         }
 
     @router.get("/hierarchy")
-    def hierarchy(session: Session = Depends(get_session)):
-        return v.hierarchy(session)
+    def hierarchy(
+        session: Session = Depends(get_session), actor: Principal = Depends(principal)
+    ):
+        return scoped_hierarchy(session, canonical_scope(session, actor, config.mode))
 
     @router.get("/inventory", response_model=InventoryResponse)
     def inventory(
@@ -239,56 +262,63 @@ def create_app(config: Settings | None = None, engine=None):
         q: str | None = Query(default=None, max_length=200),
         status: str | None = None,
         session: Session = Depends(get_session),
+        actor: Principal = Depends(principal),
     ):
         return {
-            "items": v.inventory(session, chamber_id, at or AS_OF, q, status),
+            "items": scoped_inventory(
+                session,
+                canonical_scope(session, actor, config.mode),
+                chamber_id,
+                at or AS_OF,
+                q,
+                status,
+            ),
             "as_of": v.iso(at or AS_OF),
             "synthetic": True,
         }
 
     @router.get("/components/{id}", response_model=ComponentDetail)
-    def component(id: str, session: Session = Depends(get_session)):
+    def component(
+        id: str,
+        session: Session = Depends(get_session),
+        actor: Principal = Depends(principal),
+    ):
         obj = required(session, ComponentInstance, id)
         if not v.history(session, obj):
             raise HTTPException(404, "Component has no installation history")
-        return v.component_detail(session, obj)
+        return scoped_component_detail(
+            session, canonical_scope(session, actor, config.mode), id
+        )
 
     @router.get("/pm", response_model=InventoryResponse)
-    def pm(status: str | None = None, session: Session = Depends(get_session)):
-        return {
-            "items": v.inventory(session, status=status),
-            "compliance": {
-                "completed": session.query(PMDueEvent)
-                .filter(PMDueEvent.status == "completed")
-                .count(),
-                "recorded_due_events": session.query(PMDueEvent).count(),
-            },
-            "synthetic": True,
-            "policy_note": "Engineer-entered demonstration intervals; not OEM limits, site-approved policy, or reliability estimates",
-        }
+    def pm(
+        status: str | None = None,
+        session: Session = Depends(get_session),
+        actor: Principal = Depends(principal),
+    ):
+        return scoped_pm(session, canonical_scope(session, actor, config.mode), status)
 
     @router.get("/failures", response_model=FailureList)
-    def failures(session: Session = Depends(get_session)):
-        return {
-            "items": [
-                v.failure_summary(session, f)
-                for f in session.scalars(
-                    select(FailureEpisode).order_by(FailureEpisode.started_at.desc())
-                )
-            ],
-            "alarm_only_events": session.query(EquipmentEvent)
-            .filter(EquipmentEvent.failure_id.is_(None))
-            .count(),
-            "synthetic": True,
-        }
+    def failures(
+        session: Session = Depends(get_session), actor: Principal = Depends(principal)
+    ):
+        return scoped_failures(session, canonical_scope(session, actor, config.mode))
 
     @router.get("/failures/{id}", response_model=FailureDetail)
-    def failure(id: str, session: Session = Depends(get_session)):
-        return v.failure_detail(session, required(session, FailureEpisode, id))
+    def failure(
+        id: str,
+        session: Session = Depends(get_session),
+        actor: Principal = Depends(principal),
+    ):
+        return scoped_failure_detail(
+            session, canonical_scope(session, actor, config.mode), id
+        )
 
     @router.get("/analytics")
-    def analytics(session: Session = Depends(get_session)):
-        return v.analytics(session)
+    def analytics(
+        session: Session = Depends(get_session), actor: Principal = Depends(principal)
+    ):
+        return scoped_analytics(session, canonical_scope(session, actor, config.mode))
 
     @router.get("/forecast/demo")
     def demo_forecast():
@@ -297,55 +327,22 @@ def create_app(config: Settings | None = None, engine=None):
         return synthetic_demo_forecast()
 
     @router.get("/fleet")
-    def fleet(session: Session = Depends(get_session)):
-        items = v.inventory(session)
-        episodes = v.rows(session, FailureEpisode)
-        down = v.downtime_summary(v.down_records(session))
-        h = v.hierarchy(session)
-        completeness = [
-            i["exposure"]["completeness"]
-            for i in items
-            if i["exposure"]["completeness"] is not None
-        ]
-        return {
-            "metrics": {
-                "tools": session.query(Tool).count(),
-                "chambers": session.query(Chamber).count(),
-                "installed_components": len(items),
-                "pm_due": sum(
-                    i["pm"]["status"] in {"upcoming", "overdue"} for i in items
-                ),
-                "open_investigations": sum(
-                    f.review_status == "awaiting_engineering_review" for f in episodes
-                ),
-                "downtime_hours": down["total_hours"],
-            },
-            "tools": [t for s in h["sites"] for t in s["tools"]],
-            "downtime_by_subsystem": down["downtime_by_subsystem"],
-            "recent_failures": [
-                v.failure_summary(session, f)
-                for f in sorted(episodes, key=lambda f: f.started_at, reverse=True)
-            ],
-            "data_quality": {
-                "completeness": sum(completeness) / len(completeness)
-                if completeness
-                else None,
-                "issues": session.query(SourceConflict)
-                .filter(
-                    SourceConflict.status.in_(
-                        ["unresolved", "decision_recorded_pending_materialization"]
-                    )
-                )
-                .count()
-                + 1,
-                "last_sync": v.iso(AS_OF),
-            },
-            "as_of": v.iso(AS_OF),
-            "synthetic": True,
-        }
+    def fleet(
+        session: Session = Depends(get_session), actor: Principal = Depends(principal)
+    ):
+        return scoped_fleet(
+            session, canonical_scope(session, actor, config.mode), quality(session)
+        )
 
     @router.get("/integrations")
     def integrations(session: Session = Depends(get_session)):
+        if config.mode != "synthetic":
+            return {
+                "items": [],
+                "enterprise_connected": False,
+                "legacy_imports_enabled": False,
+                "message": "Use the enterprise integration workspace for scoped source status and synchronization.",
+            }
         items = adapter_descriptions()
         for item in items:
             id = item.get("id", item.get("adapter_id"))
@@ -372,11 +369,21 @@ def create_app(config: Settings | None = None, engine=None):
         }
 
     @router.get("/quality")
-    def get_quality(session: Session = Depends(get_session)):
-        return quality(session)
+    def get_quality(
+        session: Session = Depends(get_session), actor: Principal = Depends(principal)
+    ):
+        return scoped_quality(
+            session, canonical_scope(session, actor, config.mode), quality(session)
+        )
 
     @router.get("/export/inventory.csv")
-    def export(chamber_id: str | None = None, session: Session = Depends(get_session)):
+    def export(
+        chamber_id: str | None = None,
+        session: Session = Depends(get_session),
+        actor: Principal = Depends(require_export),
+    ):
+        scope = canonical_scope(session, actor, config.mode)
+        require_canonical_export(scope)
         fields = [
             "tool_name",
             "chamber_name",
@@ -404,7 +411,7 @@ def create_app(config: Settings | None = None, engine=None):
                 else value
             )
 
-        for i in v.inventory(session, chamber_id):
+        for i in scoped_inventory(session, scope, chamber_id):
             row = {k: i.get(k) for k in fields}
             row.update(
                 {
@@ -432,6 +439,12 @@ def create_app(config: Settings | None = None, engine=None):
         session: Session = Depends(get_session),
         actor: Principal = Depends(require_roles("editor", "admin")),
     ):
+        scope = canonical_scope(session, actor, config.mode)
+        scope.require_component(session, data.component_id)
+        position_for_scope = required(session, Position, data.position_id)
+        assembly_for_scope = session.get(Assembly, position_for_scope.assembly_id)
+        sub_for_scope = session.get(Subsystem, assembly_for_scope.subsystem_id)
+        scope.require_chamber(session, sub_for_scope.chamber_id)
         component = session.scalar(
             select(ComponentInstance)
             .where(ComponentInstance.id == data.component_id)
@@ -504,6 +517,10 @@ def create_app(config: Settings | None = None, engine=None):
             )
         )
         component.disposition = "installed"
+        session.flush()
+        from .enterprise.telemetry import rebuild_component_exposure
+
+        rebuild_component_exposure(session, component.id)
         audit(
             session, actor, "install", "installation", id, data.model_dump(mode="json")
         )
@@ -524,6 +541,7 @@ def create_app(config: Settings | None = None, engine=None):
         session: Session = Depends(get_session),
         actor: Principal = Depends(require_roles("editor", "admin")),
     ):
+        canonical_scope(session, actor, config.mode).require_installation(session, id)
         installation = session.scalar(
             select(Installation).where(Installation.id == id).with_for_update()
         )
@@ -543,6 +561,10 @@ def create_app(config: Settings | None = None, engine=None):
         session.get(
             ComponentInstance, installation.component_id
         ).disposition = "removed_pending_review"
+        session.flush()
+        from .enterprise.telemetry import rebuild_component_exposure
+
+        rebuild_component_exposure(session, installation.component_id)
         removal_raw = raw_change(
             session,
             {"installation_id": id, **data.model_dump(mode="json")},
@@ -571,6 +593,9 @@ def create_app(config: Settings | None = None, engine=None):
         session: Session = Depends(get_session),
         actor: Principal = Depends(require_roles("analyst", "editor", "admin")),
     ):
+        canonical_scope(session, actor, config.mode).require_failure(
+            session, id, evidence=True
+        )
         episode = required(session, FailureEpisode, id)
         previous = episode.status
         if data.status == "confirmed" and not session.scalar(
@@ -600,6 +625,7 @@ def create_app(config: Settings | None = None, engine=None):
         session: Session = Depends(get_session),
         actor: Principal = Depends(require_roles("editor", "admin")),
     ):
+        require_conflict(session, canonical_scope(session, actor, config.mode), id)
         conflict = required(session, SourceConflict, id)
         conflict.decision = data.decision
         conflict.note = data.note
@@ -633,6 +659,11 @@ def create_app(config: Settings | None = None, engine=None):
         session: Session = Depends(get_session),
         actor: Principal = Depends(require_roles("editor", "admin")),
     ):
+        if config.mode != "synthetic":
+            raise HTTPException(
+                409,
+                "Legacy file imports are available only in synthetic mode; use authorized enterprise synchronization jobs.",
+            )
         if adapter_id not in ADAPTERS:
             raise HTTPException(404, "Unknown adapter")
         scopes = set(ADAPTERS) if actor.role == "admin" else set(actor.sources)
@@ -836,6 +867,13 @@ def create_app(config: Settings | None = None, engine=None):
         }
 
     application.include_router(router)
+    from .enterprise.router import router as evidence_router
+    from .enterprise.jobs_router import router as jobs_router
+    from .enterprise.telemetry_router import router as telemetry_router
+
+    application.include_router(evidence_router)
+    application.include_router(jobs_router)
+    application.include_router(telemetry_router)
     return application
 
 

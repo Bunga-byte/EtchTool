@@ -1,0 +1,10 @@
+SYNTHETIC PM COMPLETION RECORD
+Kind: maintenance
+Tool alias: tool1a
+Chamber alias: ch1a
+Component serial: SYN-01A-VALVE-001
+Maintenance type: pm
+Pm completed at: 2026-01-26T00:00:00Z
+Completed at: 2026-01-26T00:00:00Z
+Work order reference: SYN-ENTERPRISE-PM-001
+Findings: Synthetic inspection completed; no refurbishment reset claimed.

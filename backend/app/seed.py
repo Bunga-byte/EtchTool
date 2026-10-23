@@ -35,7 +35,12 @@ def raw(session, id, source, payload, at=START):
 
 def seed(session: Session):
     if session.get(Site, "site-demo"):
-        return False
+        from .enterprise.seed import seed_enterprise
+
+        changed = seed_enterprise(session)
+        if changed:
+            session.commit()
+        return changed
     session.add(Site(id="site-demo", name="Synthetic Engineering Fab", synthetic=True))
     session.flush()
     session.add(
@@ -869,6 +874,9 @@ def seed(session: Session):
             detail={"synthetic": True, "as_of": AS_OF.isoformat()},
         )
     )
+    from .enterprise.seed import seed_enterprise
+
+    seed_enterprise(session)
     session.commit()
     return True
 

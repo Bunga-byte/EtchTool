@@ -1,5 +1,7 @@
 # Authorized Samsung integration handoff
 
+This document retains the foundation's source-discovery and engineering requirements. The current reviewed ingestion, sensor and internal-AI handoff is documented in [SAMSUNG_HANDOFF](SAMSUNG_HANDOFF.md) and its linked Phase 2 guides.
+
 ## Current boundary
 
 Every external dataset and result shipped here is synthetic. No Samsung service is connected. No internal endpoint, schema, alarm code, credentials, controlled OEM specification, production recipe or real equipment identifier is embedded. File-backed adapters exercise ingestion contracts; their names express potential roles only. No claim is made about the precise capabilities of c-TTTM, Informs, FDC Trace or Lam UI.
@@ -19,7 +21,7 @@ Transfer the repository, dependency locks and documentation through the approved
 
 For every source, specify hostname and network approval, service identity, least-privilege permissions, rate limits, pagination, idempotent identifiers, deletion/correction policy, event and ingestion timestamps, incremental watermark, failure retry policy, lineage and audit requirements. Implement contract tests against approved de-identified fixtures before enabling live synchronization. Do not infer endpoints or discover them by scanning.
 
-The current import API stages validated raw records and preserves original import attempts, audit runs, and conflicts. It does not automatically update domain inventory, installations, failures, or exposure. Supplied file fixtures use separate fictional IDs and dates from the seeded fleet. Internal engineers must implement and validate the explicit mapping and promotion transaction that converts authorized staged records into canonical effective-dated entities after source-authority review.
+The legacy file import API stages validated raw records and preserves original import attempts, audit runs, and conflicts. The Phase 2 enterprise workflow adds source versions, exact evidence, entity matching and an explicit engineering-reviewed promotion transaction into canonical effective-dated records. Receiving an imported record alone does not update inventory. Fixtures use separate fictional IDs and dates from the seeded fleet. Internal engineers must configure actual source mappings/authority and validate the approved promotion path against known history.
 
 ## Equipment and source authority mapping
 

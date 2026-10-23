@@ -1,0 +1,384 @@
+{
+  "schema_version": "1.0",
+  "connector_id": "informs",
+  "display_name": "c-TTTM / Informs (authorized interface unknown)",
+  "source_adapter_binding": "maintenance",
+  "connection_state": "not_connected",
+  "external_environment_data": "synthetic_only",
+  "runtime_contract": {
+    "module": "app.enterprise.contracts",
+    "connector_protocol": "EnterpriseConnector",
+    "source_document_model": "SourceDocument",
+    "fact_proposal_model": "FactProposalDraft",
+    "auth_provider_protocol": "AuthenticationProvider",
+    "capability_fields": [
+      "discover_schema",
+      "search",
+      "retrieve_documents",
+      "retrieve_attachments",
+      "list_records",
+      "get_record",
+      "incremental_polling",
+      "time_series",
+      "installation_records",
+      "subscribe_updates"
+    ]
+  },
+  "capabilities": {
+    "expected_for_workflow": [
+      "search",
+      "retrieve_documents",
+      "retrieve_attachments",
+      "list_records",
+      "get_record",
+      "incremental_polling"
+    ],
+    "actual_source_capabilities": null,
+    "capability_discovery_policy": "approved_interface_only_no_scanning"
+  },
+  "connection_configuration": {
+    "selected_transport": null,
+    "approved_interface_reference": null,
+    "endpoint_or_export_location": null,
+    "allowed_transport_categories_after_approval": [
+      "approved_api",
+      "internal_sdk",
+      "managed_export",
+      "file_drop",
+      "approved_other"
+    ],
+    "auth_provider_ref": null,
+    "secret_references": [],
+    "credential_values_permitted": false,
+    "equipment_allowlist": [],
+    "collection_allowlist": [],
+    "source_queries": [],
+    "configuration_approval_reference": null
+  },
+  "normalized_requirements": {
+    "description": "FRIP SourceDocument metadata and extracted proposal payload requirements only; not proprietary source fields. Requirements are conditional on proposal kind. Missing evidence blocks promotion. document.revision is the source revision; payload.revision is the component revision.",
+    "required_fields": [
+      {
+        "destination": "document.original_id",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "provenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.revision",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "versioning"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.recorded_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "provenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.effective_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "effective_time"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.equipment_alias",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "identity"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "document.chamber_alias",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "chamber_identity"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.position_alias",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "installation",
+          "replacement"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.component_serial",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "installation",
+          "replacement"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.part_number",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "component_definition"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.installed_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "installation",
+          "replacement"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      }
+    ],
+    "optional_fields": [
+      {
+        "destination": "payload.old_component_serial",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "replacement"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.removed_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "replacement"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.revision",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "revision_matching"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.work_order_reference",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "maintenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.findings",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "evidence"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.maintenance_type",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "maintenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.completed_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "maintenance"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.pm_completed_at",
+        "data_type": "datetime_utc",
+        "unit": "UTC",
+        "required_for": [
+          "pm_completion"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      },
+      {
+        "destination": "payload.failure_id",
+        "data_type": "string",
+        "unit": null,
+        "required_for": [
+          "failure_evidence"
+        ],
+        "actual_source_field": null,
+        "approved_transform_ref": null,
+        "verification": "unconfigured"
+      }
+    ],
+    "canonical_destination_entities": [
+      "source_versions",
+      "fact_proposals",
+      "work_orders",
+      "maintenance_actions",
+      "installations",
+      "replacement_events",
+      "evidence"
+    ],
+    "canonical_promotion_requires_review": true
+  },
+  "validation_rule_ids": [
+    "utc_aware_effective_and_recorded_time",
+    "preserve_original_content_hash_revision",
+    "exact_evidence_location_required",
+    "scope_source_equipment_collection",
+    "missing_serial_or_install_time_review",
+    "no_latest_arrival_authority",
+    "no_automatic_failure_from_alarm_or_replacement"
+  ],
+  "identity_matching": {
+    "deterministic_key_sets": [
+      [
+        "tool_alias",
+        "chamber_alias",
+        "position_alias",
+        "component_serial"
+      ],
+      [
+        "work_order_reference"
+      ]
+    ],
+    "description_only_merge_permitted": false,
+    "effective_interval_required": true,
+    "approved_aliases_required": true,
+    "missing_identity_action": "review_no_promotion",
+    "ambiguity_action": "review_no_merge",
+    "internal_ai_may_propose": true,
+    "internal_ai_may_verify_or_promote": false
+  },
+  "review_policy": {
+    "default": "engineering_approval_required",
+    "automatic_promotion_enabled": false,
+    "source_authority_rules": [],
+    "hard_stop_conditions": [
+      "missing_source_permission",
+      "unknown_equipment_or_collection",
+      "unsupported_capability",
+      "missing_identity_or_effective_timestamp",
+      "ambiguous_serial_or_position",
+      "conflicting_source_assertions",
+      "unverified_sensor_mapping",
+      "undocumented_oem_limit",
+      "external_ai_for_confidential_data"
+    ]
+  },
+  "synchronization": {
+    "frip_workflow_modes": [
+      "backfill",
+      "incremental",
+      "reprocess"
+    ],
+    "actual_source_method": null,
+    "incremental_source_field": null,
+    "checkpoint_semantics": "Persist only the last committed page. Unchanged hints use metadata_version_token(DocumentMetadata) over the complete UTC-normalized envelope, never body hash/revision alone; metadata-only corrections must be retrieved/reconciled. Resume without skipping failed work; actual source cursor semantics require approval.",
+    "periodic_polling_authorized": false,
+    "max_page_size": 100,
+    "bounded_queries_required": true,
+    "retry": {
+      "max_attempts": 3,
+      "initial_backoff_seconds": 1,
+      "max_backoff_seconds": 60,
+      "authorization_failure_action": "stop_no_retry"
+    },
+    "dead_letter_on_exhaustion": true
+  },
+  "error_handling": {
+    "unchanged_content": "deduplicate_preserve_lineage",
+    "invalid_record": "quarantine_with_evidence",
+    "conflicting_source": "preserve_both_review_required",
+    "unsupported_capability": "explicit_error_no_fallback_scraping",
+    "unavailable_evidence": "unverified_no_promotion"
+  },
+  "test_targets": {
+    "suite_paths": [
+      "backend/tests/test_enterprise_documents.py",
+      "backend/tests/test_integrations.py",
+      "backend/tests/test_manifest_schema.py",
+      "backend/tests/test_enterprise_jobs.py",
+      "backend/tests/test_enterprise_acceptance.py"
+    ],
+    "acceptance_scenarios": [
+      "A",
+      "B",
+      "C",
+      "G",
+      "H",
+      "I"
+    ],
+    "contract_validation_command": ".venv/bin/python -m pytest -q backend/tests/test_manifest_schema.py"
+  },
+  "outstanding_unknowns": [
+    "Approved record/search/document/attachment interface and supported capabilities",
+    "Actual structured fields, document layout and revisions",
+    "Equipment and collection access grants, timezone and clock semantics",
+    "Work-order correction/version and replacement completion semantics",
+    "Attachment retention, OCR permission and approved internal AI provider"
+  ]
+}

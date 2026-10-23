@@ -394,3 +394,36 @@ def test_database_rejects_reversed_exposure_and_downtime_intervals(client, model
         with pytest.raises(IntegrityError):
             session.flush()
         session.rollback()
+
+
+def test_enterprise_disables_unscoped_legacy_imports_and_hides_global_status(client):
+    config = Settings(
+        database_url=client.app.state.config.database_url,
+        mode="enterprise",
+        tokens_json={
+            "legacy-enterprise-editor": {
+                "subject": "tool1-editor",
+                "role": "editor",
+                "sources": "parts",
+                "equipment": "tool-1",
+                "collections": "parts",
+            }
+        },
+    )
+    enterprise = create_app(config, engine=client.app.state.engine)
+    headers = {"Authorization": "Bearer legacy-enterprise-editor"}
+    with TestClient(enterprise) as api:
+        metadata = api.get("/api/integrations", headers=headers)
+        assert metadata.status_code == 200
+        assert metadata.json()["items"] == []
+        assert metadata.json()["legacy_imports_enabled"] is False
+        with client.app.state.sessions() as session:
+            before = session.query(RawSourceRecord).count()
+        result = api.post(
+            "/api/integrations/parts/import", json={"records": []}, headers=headers
+        )
+        assert result.status_code == 409
+        with client.app.state.sessions() as session:
+            assert session.query(RawSourceRecord).count() == before
+    # The standalone synthetic workflow remains available.
+    assert len(client.get("/api/integrations").json()["items"]) == 6

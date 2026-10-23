@@ -60,12 +60,15 @@ The first script runs backend tests, frontend unit tests, TypeScript checking, a
 | --- | --- |
 | `FRIP_DATABASE_URL` | SQLAlchemy URL; default `sqlite:///./frip.db` relative to `backend/`. PostgreSQL uses `postgresql+psycopg://…`. |
 | `FRIP_MODE` | `synthetic` permits anonymous read-only access; `enterprise` requires configured authentication. |
+| `FRIP_AUTH_BACKEND` | `local_tokens` for development; `external_provider` requires a server-installed verified principal provider. A setting alone does not implement SSO. |
 | `FRIP_TOKENS_JSON` | Secret server-side token-to-principal bindings for the local auth boundary. Empty by default. Never commit values. |
 | `FRIP_CORS_ORIGINS` | JSON array of specifically permitted browser origins. |
 | `VITE_API_PROXY_TARGET` | Development proxy target; defaults to the local API. It is not a credential. |
 | `FRIP_DB_PASSWORD` | Local Compose database password. |
 
 Mutations require server-assigned roles and bearer authentication. Configure temporary local tokens through a shell or secret manager, and replace this boundary with verified corporate SSO before production. A client-supplied role header grants no permission. The UI can remain read-only while authorized API operations are exercised using the OpenAPI interface. Do not put credentials into frontend build variables. See [security](docs/security.md) for role boundaries and deployment gaps.
+
+Phase 2 token bindings can additionally contain explicit comma-separated `sources`, `equipment` and `collections`, with `export` set to the string `true` only when authorized. Wildcard scopes are rejected. Missing equipment/collection grants cannot retrieve or review enterprise source records merely because the caller has an editing role. Corporate SSO should produce equivalent verified server principals instead of these local development bindings.
 
 ## Project map
 
@@ -81,3 +84,22 @@ Mutations require server-assigned roles and bearer authentication. Configure tem
 | `scripts/`, `compose.yaml`, `.gitlab-ci.yml` | Repeatable local setup, deployment, and CI examples. |
 
 Read [architecture](docs/architecture.md), [data dictionary](docs/data-dictionary.md), [API contract](docs/api-contract.md), [analytics assumptions](docs/model-validation.md), and the [Samsung integration handoff](docs/samsung-handoff.md) before extending the foundation. Internal schemas, equipment ID mappings, OEM documentation, SSO, and production model validation remain outside this synthetic implementation.
+
+## Phase 2 enterprise handoff
+
+The integration extension preserves the existing UI/framework and adds source-neutral connector/document contracts, immutable source versions, constrained extraction and evidence, exact identity matching, engineering review, canonical promotion, durable synchronization, and configuration-aware sensor/exposure lineage. External sources remain synthetic; no real Samsung service is connected.
+
+Begin with [SAMSUNG_HANDOFF](docs/SAMSUNG_HANDOFF.md), then use [INTEGRATION_MATRIX](docs/INTEGRATION_MATRIX.md), [DATA_DICTIONARY](docs/DATA_DICTIONARY.md), [SENSOR_MAPPING_GUIDE](docs/SENSOR_MAPPING_GUIDE.md), [RF_HOUR_VALIDATION](docs/RF_HOUR_VALIDATION.md), [SECURITY_AND_DATA_BOUNDARIES](docs/SECURITY_AND_DATA_BOUNDARIES.md), and [INTERNAL_AI_INSTRUCTIONS](docs/INTERNAL_AI_INSTRUCTIONS.md). Strict machine-readable templates are in `integration_manifests/` with `schemas/manifest.schema.json`. The [Phase 2 validation ledger](docs/PHASE2_VALIDATION.md) distinguishes executed results from pending acceptance requirements.
+
+Run the complete synthetic source-to-PM demonstration after setup:
+
+```bash
+cd backend
+../.venv/bin/python -m app.enterprise.demo
+```
+
+This creates and removes an isolated temporary database, retrieves a maintenance document, checks 14 exact evidence spans, approves its replacement proposal, imports operating traces, separately approves sensor mappings and an exposure rule, and requests refreshed component, inventory and fleet PM projections. The removed serial stops at 70 RF hours. The replacement receives 60 RF hours with 590 hours remaining against the fictional 650-hour demonstration policy. No existing application database changes. The browser suite also exercises this approval-to-component-page flow.
+
+In the running UI, open **Data integrations → Enterprise handoff workspace** for sources, bounded ingestion jobs, original documents, review, exact identity mappings and the sensor registry. Component drawers include **Telemetry & lineage**. Anonymous synthetic access remains read-only; engineering decisions require a configured server-side editor/admin identity with the applicable source, equipment and collection grants.
+
+The [implementation report](docs/PHASE2_IMPLEMENTATION.md) lists the changes, architecture, demonstration, remaining internal requirements and complete file inventory. Executed test and deployment evidence is in [PHASE2_VALIDATION](docs/PHASE2_VALIDATION.md) and [PHASE2_DEPLOYMENT_VALIDATION](docs/PHASE2_DEPLOYMENT_VALIDATION.md).

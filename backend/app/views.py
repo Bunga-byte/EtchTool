@@ -80,7 +80,8 @@ def exposure_for(session, component, at=AS_OF, until_first_failure=False):
             )
         ):
             obj = {
-                "id": r.source_record_id,
+                "id": r.id,
+                "source_record_id": r.source_record_id,
                 "start": r.start,
                 "end": r.end,
                 "dimension": r.dimension,
@@ -99,6 +100,7 @@ def exposure_for(session, component, at=AS_OF, until_first_failure=False):
         ):
             coverage.append(
                 {
+                    "id": r.id,
                     "start": r.start,
                     "end": r.end,
                     "source": r.source,
@@ -139,6 +141,13 @@ def exposure_for(session, component, at=AS_OF, until_first_failure=False):
         )
         if first:
             at = min(at, first.started_at)
+    from .enterprise.telemetry import project_component_exposure
+
+    projection = project_component_exposure(
+        session, component, hist, at, all_intervals, coverage
+    )
+    all_intervals = projection["intervals"]
+    coverage = projection["coverage"]
     result = component_exposure(
         all_intervals,
         hist,
@@ -150,6 +159,12 @@ def exposure_for(session, component, at=AS_OF, until_first_failure=False):
         if refurb and refurb.completed_at <= at
         else None,
     )
+    result["lineage_ids"] = projection.get("lineage_ids", [])
+    result["exposure_rules"] = projection.get("rules", [])
+    if projection.get("issues"):
+        result["issues"] = list(dict.fromkeys(result["issues"] + projection["issues"]))
+        result["confidence"] = "limited"
+        result["lifetime_confidence"] = "limited"
     result["snapshot_at"] = iso(at)
     result["measurement_source"] = "Synthetic equipment-state records"
     conflicts = [
@@ -482,11 +497,12 @@ def failure_detail(session, episode):
     return result
 
 
-def analytics(session):
+def analytics(session, *, component_ids=None, tool_ids=None):
     rf = [
         c
         for c in rows(session, ComponentInstance)
-        if session.get(ComponentDefinition, c.definition_id).exposure_dimension
+        if (component_ids is None or c.id in component_ids)
+        and session.get(ComponentDefinition, c.definition_id).exposure_dimension
         == "rf_hours"
     ]
     cohort = []
@@ -551,7 +567,25 @@ def analytics(session):
             )
     total = sum(c["exposure_hours"] for c in cohort)
     failures = sum(c["failures"] for c in cohort)
-    down = downtime_summary(down_records(session))
+    down_rows = [
+        row
+        for row in down_records(session)
+        if tool_ids is None or row["tool_id"] in tool_ids
+    ]
+    if component_ids is not None:
+        down_rows = [
+            {
+                **row,
+                "component_id": None,
+                "weight": 0,
+                "subsystem": "Unattributed",
+                "attribution_status": "restricted",
+            }
+            if row.get("component_id") not in component_ids
+            else row
+            for row in down_rows
+        ]
+    down = downtime_summary(down_rows)
     return {
         "rate": poisson_rate(failures, total) if total else None,
         "survival": kaplan_meier(observations),
@@ -605,6 +639,17 @@ def component_detail(session, component):
     installs = []
 
     def removal_provenance(installation):
+        if installation.removed_at:
+            removal = session.scalar(
+                select(MaintenanceAction).where(
+                    MaintenanceAction.component_id == installation.component_id,
+                    MaintenanceAction.timestamp == installation.removed_at,
+                    MaintenanceAction.action == "Reviewed removal",
+                )
+            )
+            if removal:
+                order = session.get(WorkOrder, removal.work_order_id)
+                return provenance(session.get(RawSourceRecord, order.source_record_id))
         event = session.scalar(
             select(AuditLog)
             .where(AuditLog.entity_id == installation.id, AuditLog.action == "remove")

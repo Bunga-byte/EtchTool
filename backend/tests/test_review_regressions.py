@@ -17,7 +17,7 @@ def review_app(tmp_path):
     bindings = {
         "review-parts-token": {"subject": "same-editor", "role": "editor", "sources": "parts"},
         "review-fdc-token": {"subject": "same-editor", "role": "editor", "sources": "fdc"},
-        "review-viewer-token": {"subject": "review-viewer", "role": "viewer"},
+        "review-viewer-token": {"subject": "review-viewer", "role": "viewer", "equipment": "tool-1"},
         "review-admin-token": {"subject": "review-admin", "role": "admin"},
     }
     app = create_app(Settings(_env_file=None, database_url=f"sqlite:///{tmp_path / 'review.db'}", tokens_json=bindings))

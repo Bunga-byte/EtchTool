@@ -1,0 +1,15 @@
+SYNTHETIC MAINTENANCE DOCUMENT — NOT A SAMSUNG RECORD
+Kind: replacement
+Tool alias: tool1a
+Chamber alias: ch1a
+Position alias: rf1a
+Old component serial: SYN-01A-RF-002
+Component serial: SYN-01A-RF-003
+Part number: SYN-RF-100-A
+Revision: A
+Removed at: 2026-01-26T00:00:00Z
+Installed at: 2026-01-26T00:00:00Z
+Maintenance type: planned_replacement
+Work order reference: SYN-ENTERPRISE-WO-001
+Replacement reason: Synthetic planned exchange for engineering acceptance testing
+Findings: No confirmed physical hardware failure. Replacement alone is not failure evidence.

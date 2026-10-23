@@ -1,0 +1,12 @@
+SYNTHETIC INSTALLATION DOCUMENT — NOT A SAMSUNG RECORD
+Kind: installation
+Tool alias: tool1a
+Chamber alias: ch1a
+Position alias: emptyrf1a
+Component serial: SYN-ENT-INSTALL-001
+Part number: SYN-RF-100-A
+Revision: A
+Installed at: 2026-01-26T00:00:00Z
+Maintenance type: commissioning_installation
+Work order reference: SYN-ENTERPRISE-WO-002
+Findings: Synthetic installation into an unused configurable RF position.

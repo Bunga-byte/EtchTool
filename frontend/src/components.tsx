@@ -19,7 +19,7 @@ export function Badge({
   const text = String(value || "unknown").toLowerCase();
   const severity = /overdue|fail|conflict|error|unconfirmed/.test(text)
     ? "danger"
-    : /upcoming|pending|limited|review|incomplete|open/.test(text)
+    : /upcoming|pending|limited|review|incomplete|open|unresolved/.test(text)
       ? "warning"
       : /ok|operational|complete|confirmed|resolved|active|good|installed/.test(
             text,

@@ -1,0 +1,10 @@
+SYNTHETIC PART TRACKER EXPORT — NOT A LAM RECORD
+Kind: inventory
+Tool alias: tool1a
+Chamber alias: ch1a
+Position alias: rf1a
+Component serial: SYN-01A-RF-002
+Part number: SYN-RF-100-A
+Revision: A
+Installed at: 2026-01-21T00:00:00Z
+Findings: Synthetic tracker still reports the old serial after the maintenance replacement effective time. Preserve both sources and require adjudication.

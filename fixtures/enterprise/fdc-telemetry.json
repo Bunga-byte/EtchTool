@@ -1,0 +1,327 @@
+{
+  "synthetic": true,
+  "kind": "telemetry",
+  "records": [
+    {
+      "record_type": "sensor",
+      "channel_key": "SYN-RF-ACTIVE",
+      "tool_id": "tool-1",
+      "chamber_id": "ch-1-a",
+      "subsystem": "RF delivery",
+      "description": "Synthetic RF-active state",
+      "signal_type": "state",
+      "unit": null,
+      "sampling_hz": null,
+      "valid_min": null,
+      "valid_max": null,
+      "configuration_id": "cfg-demo",
+      "effective_from": "2026-01-26T00:00:00Z",
+      "verification": "synthetic_only",
+      "quality": "synthetic"
+    },
+    {
+      "record_type": "sensor",
+      "channel_key": "SYN-RF-RESPONSE",
+      "tool_id": "tool-1",
+      "chamber_id": "ch-1-a",
+      "subsystem": "RF delivery",
+      "description": "Synthetic response diagnostic only, not validated component degradation",
+      "signal_type": "measured",
+      "unit": "normalized demo units",
+      "sampling_hz": null,
+      "valid_min": null,
+      "valid_max": null,
+      "configuration_id": "cfg-demo",
+      "effective_from": "2026-01-26T00:00:00Z",
+      "verification": "synthetic_only",
+      "quality": "synthetic"
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-26T00:00:00Z",
+      "state": "on",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 3
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-26T00:00:00Z",
+      "value": 1.0,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 4
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-26T12:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 5
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-26T12:00:00Z",
+      "value": 1.012,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 6
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-27T00:00:00Z",
+      "state": "on",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 7
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-27T00:00:00Z",
+      "value": 1.02,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 8
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-27T12:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 9
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-27T12:00:00Z",
+      "value": 1.032,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 10
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-28T00:00:00Z",
+      "state": "on",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 11
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-28T00:00:00Z",
+      "value": 1.04,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 12
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-28T12:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 13
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-28T12:00:00Z",
+      "value": 1.052,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 14
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-29T00:00:00Z",
+      "state": "on",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 15
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-29T00:00:00Z",
+      "value": 1.06,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 16
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-29T12:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 17
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-29T12:00:00Z",
+      "value": 1.072,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 18
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-30T00:00:00Z",
+      "state": "on",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 19
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-30T00:00:00Z",
+      "value": 1.08,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 20
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-30T12:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 21
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-30T12:00:00Z",
+      "value": 1.092,
+      "quality": "synthetic",
+      "source_location": {
+        "row": 22
+      }
+    },
+    {
+      "record_type": "sample",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "timestamp": "2026-01-31T00:00:00Z",
+      "state": "off",
+      "quality": "synthetic",
+      "source_location": {
+        "row": 23
+      }
+    },
+    {
+      "record_type": "mapping",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "definition_id": "rf-a",
+      "relationship": "exposure_counter",
+      "physical_explanation": "Synthetic state channel measures applicable primary RF on-time only.",
+      "configuration_id": "cfg-demo",
+      "part_revision": "A",
+      "effective_from": "2026-01-26T00:00:00Z",
+      "effective_to": "2026-01-31T00:00:00Z",
+      "evidence": [
+        {
+          "reference": "SYN-SENSOR-DEFINITION-001",
+          "synthetic": true
+        }
+      ],
+      "method": "engineer_proposal"
+    },
+    {
+      "record_type": "mapping",
+      "channel_key": "SYN-RF-RESPONSE",
+      "chamber_id": "ch-1-a",
+      "definition_id": "rf-a",
+      "relationship": "supporting_diagnostic",
+      "physical_explanation": "Synthetic diagnostic response supports investigation; no component degradation prediction is established.",
+      "configuration_id": "cfg-demo",
+      "part_revision": "A",
+      "effective_from": "2026-01-26T00:00:00Z",
+      "effective_to": "2026-01-31T00:00:00Z",
+      "evidence": [
+        {
+          "reference": "SYN-SENSOR-DEFINITION-001",
+          "synthetic": true
+        }
+      ],
+      "method": "engineer_proposal"
+    },
+    {
+      "record_type": "exposure_rule",
+      "channel_key": "SYN-RF-ACTIVE",
+      "chamber_id": "ch-1-a",
+      "definition_id": "rf-a",
+      "configuration_id": "cfg-demo",
+      "part_revision": "A",
+      "dimension": "rf_hours",
+      "source_name": "rf_primary",
+      "method": "state",
+      "active_value": "on",
+      "inactive_value": "off",
+      "max_gap_seconds": 86400,
+      "aggregation": "union",
+      "document_reference": "SYN-EXPOSURE-POLICY-001 demonstration only",
+      "effective_from": "2026-01-26T00:00:00Z",
+      "effective_to": "2026-01-31T00:00:00Z"
+    }
+  ]
+}
